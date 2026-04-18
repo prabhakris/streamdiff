@@ -68,3 +68,19 @@ def test_apply_all_rules_when_none_specified():
     # Should not raise; runs all registered rules
     issues = apply_rules(_removed_change())
     assert isinstance(issues, list)
+
+
+def test_apply_rules_multiple_issues():
+    """All failing rules contribute issues when multiple are applied."""
+    @register("FAIL_ONE")
+    def fail_one(change):
+        return ValidationIssue(change=change, rule="FAIL_ONE", message="first failure")
+
+    @register("FAIL_TWO")
+    def fail_two(change):
+        return ValidationIssue(change=change, rule="FAIL_TWO", message="second failure")
+
+    issues = apply_rules(_removed_change(), rule_names=["FAIL_ONE", "FAIL_TWO"])
+    assert len(issues) == 2
+    rule_names = {issue.rule for issue in issues}
+    assert rule_names == {"FAIL_ONE", "FAIL_TWO"}
