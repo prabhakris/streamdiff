@@ -50,8 +50,18 @@ def apply_tagging(
 
 
 def format_tag_summary(tagged: List[TaggedChange]) -> str:
+    """Format a human-readable summary of tag counts from a list of tagged changes."""
     summary = tags_summary(tagged)
     if not summary:
         return "Tags: none"
     parts = ", ".join(f"{tag}={count}" for tag, count in sorted(summary.items()))
     return f"Tags: {parts}"
+
+
+def format_tagged_change(tc: TaggedChange) -> str:
+    """Format a single tagged change as a string, including its tags.
+
+    Returns a line like: '[destructive, nullable] column users.email: ...'
+    """
+    tag_str = ", ".join(sorted(tc.tags)) if tc.tags else "untagged"
+    return f"[{tag_str}] {tc.change}"
