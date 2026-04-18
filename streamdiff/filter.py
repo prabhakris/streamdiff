@@ -37,3 +37,17 @@ def exclude_field_names(result: DiffResult, names: List[str]) -> DiffResult:
     """Remove changes whose field name is in the provided list."""
     changes = [c for c in result.changes if c.field_name not in names]
     return DiffResult(changes=changes)
+
+
+def filter_by_change_types(result: DiffResult, change_types: List[ChangeType]) -> DiffResult:
+    """Keep only changes whose change type is in the provided list.
+
+    Args:
+        result: The DiffResult to filter.
+        change_types: A list of ChangeType values to retain.
+
+    Returns:
+        A new DiffResult containing only changes with a matching change type.
+    """
+    changes = [c for c in result.changes if c.change_type in change_types]
+    return DiffResult(changes=changes)
