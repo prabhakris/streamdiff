@@ -19,8 +19,13 @@ def load_alias_map_from_args(args: argparse.Namespace) -> Optional[AliasMap]:
     path = getattr(args, "alias_map", None)
     if not path:
         return None
-    with open(path) as fh:
-        data = json.load(fh)
+    try:
+        with open(path) as fh:
+            data = json.load(fh)
+    except FileNotFoundError:
+        raise FileNotFoundError(f"Alias map file not found: {path!r}")
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"Alias map file contains invalid JSON: {path!r}: {exc}") from exc
     if not isinstance(data, dict):
         raise ValueError(f"Alias map file must contain a JSON object, got: {type(data)}")
     return load_alias_map(data)
