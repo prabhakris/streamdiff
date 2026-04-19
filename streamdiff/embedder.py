@@ -34,6 +34,10 @@ class EmbedReport:
                 return v
         return None
 
+    def field_names(self) -> List[str]:
+        """Return a list of all field names in this report."""
+        return [v.field_name for v in self.vectors]
+
     def to_dict(self) -> dict:
         return {
             "schema": self.schema_name,
