@@ -72,6 +72,13 @@ def test_filter_by_tag_returns_matching():
     assert destructive[0].change.field_name == "b"
 
 
+def test_filter_by_tag_returns_empty_when_no_match():
+    changes = [_change("a", ChangeType.ADDED), _change("b", ChangeType.ADDED)]
+    tagged = tag_all(changes)
+    destructive = filter_by_tag(tagged, "destructive")
+    assert destructive == []
+
+
 def test_tags_summary_counts_correctly():
     changes = [
         _change("a", ChangeType.ADDED),
@@ -82,6 +89,11 @@ def test_tags_summary_counts_correctly():
     summary = tags_summary(tagged)
     assert summary["additive"] == 2
     assert summary["destructive"] == 1
+
+
+def test_tags_summary_empty_input():
+    summary = tags_summary([])
+    assert summary == {}
 
 
 def test_str_representation():
