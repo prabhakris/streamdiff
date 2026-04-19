@@ -32,6 +32,14 @@ The following substrings trigger redaction (case-insensitive):
 result = redact_schema(schema, patterns=["internal", "private"])
 ```
 
+To extend the default patterns rather than replace them, use `extend_patterns`:
+
+```python
+from streamdiff.redactor import extend_patterns
+
+result = redact_schema(schema, patterns=extend_patterns(["internal", "private"]))
+```
+
 ## Bulk Redaction
 
 ```python
