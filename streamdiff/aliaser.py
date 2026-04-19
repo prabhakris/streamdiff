@@ -11,6 +11,8 @@ class AliasMap:
     mappings: Dict[str, str] = field(default_factory=dict)
 
     def add(self, old_name: str, new_name: str) -> None:
+        if not old_name or not new_name:
+            raise ValueError("Alias old_name and new_name must be non-empty strings.")
         self.mappings[old_name] = new_name
 
     def resolve(self, name: str) -> Optional[str]:
