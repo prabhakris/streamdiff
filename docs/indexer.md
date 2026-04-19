@@ -48,15 +48,30 @@ from streamdiff.indexer import build_index
 schema = load_schema("schema.json")
 idx = build_index(schema)
 
-# Lookup
+# Lookup a single field by exact name
 entry = idx.get("user_id")
 
-# Search
+# Search fields whose name contains a substring (case-insensitive)
 matches = idx.search("user")
 
 # Filter by type
 from streamdiff.schema import FieldType
 strings = idx.by_type(FieldType.STRING)
+
+# Filter by depth
+top_level = idx.by_depth(0)
+nested = idx.by_depth(2)
+```
+
+### `idx.by_depth(depth)`
+
+Returns all index entries whose field depth equals `depth`.
+Useful for inspecting only top-level fields (`depth=0`) or a specific
+nesting level without manually filtering on `.` counts.
+
+```python
+# List all top-level field names
+top_names = [e.name for e in idx.by_depth(0)]
 ```
 
 ## Field depth
