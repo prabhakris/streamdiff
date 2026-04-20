@@ -72,3 +72,13 @@ def test_field_to_dict():
     assert fd["name"] == "id"
     assert fd["required"] is True
     assert "score" in fd
+
+
+def test_field_score_reflects_field_type():
+    """Verify that more complex field types receive progressively lower scores."""
+    required_string = score_coverage(_schema(_field("a", FieldType.STRING, required=True)))
+    required_array = score_coverage(_schema(_field("b", FieldType.ARRAY, required=True)))
+    required_map = score_coverage(_schema(_field("c", FieldType.MAP, required=True)))
+
+    assert required_string.total_score >= required_array.total_score
+    assert required_array.total_score >= required_map.total_score
