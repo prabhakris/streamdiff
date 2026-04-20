@@ -46,6 +46,14 @@ def test_apply_annotation_returns_list_when_flag_on():
     assert isinstance(result[0], AnnotatedChange)
 
 
+def test_apply_annotation_empty_changes():
+    """Annotating an empty change list should return an empty list, not None."""
+    ns = _parse(["--annotate"])
+    result = apply_annotation(ns, [])
+    assert result is not None
+    assert result == []
+
+
 def test_format_annotations_empty():
     text = format_annotations([])
     assert "No changes" in text
