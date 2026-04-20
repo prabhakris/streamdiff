@@ -55,6 +55,25 @@ if v_old and v_new:
 
 A similarity of `1.0` means the fields are identical in type and requiredness. A value closer to `0.0` indicates structural divergence.
 
+## Comparing All Shared Fields
+
+To compute pairwise similarities across every field present in both schemas:
+
+```python
+from streamdiff.embedder import embed_schema, cosine_similarity
+from streamdiff.loader import load_schema
+
+old_report = embed_schema(load_schema("old.json"))
+new_report = embed_schema(load_schema("new.json"))
+
+old_fields = {v.field: v for v in old_report.vectors}
+new_fields = {v.field: v for v in new_report.vectors}
+
+for field in sorted(old_fields.keys() & new_fields.keys()):
+    sim = cosine_similarity(old_fields[field].values, new_fields[field].values)
+    print(f"{field}: {sim:.4f}")
+```
+
 ## Exit Codes
 
 | Code | Meaning |
