@@ -36,6 +36,12 @@ def test_add_group_args_change_type():
     assert ns.group_by == "change_type"
 
 
+def test_add_group_args_custom_separator():
+    ns = _parse(["--group-by", "prefix", "--group-separator", "_"])
+    assert ns.group_by == "prefix"
+    assert ns.group_separator == "_"
+
+
 def test_apply_grouping_no_group_by_does_nothing(capsys):
     ns = _parse([])
     apply_grouping(ns, [_change("a")])
@@ -58,3 +64,11 @@ def test_apply_grouping_by_change_type(capsys):
     apply_grouping(ns, changes)
     out = capsys.readouterr().out
     assert "added" in out.lower() or "ADDED" in out
+
+
+def test_apply_grouping_empty_changes_produces_no_output(capsys):
+    """Grouping an empty list of changes should not produce any output."""
+    ns = _parse(["--group-by", "prefix"])
+    apply_grouping(ns, [])
+    out = capsys.readouterr().out
+    assert out == ""
